@@ -8,10 +8,11 @@ void main() {
     final Config config = new Config(
       "YOUR TENANT ID",
       "YOUR CLIENT ID",
-      "openid profile offline_access");
+      "openid profile offline_access",
+      "redirect uri",
+    );
     final AadOAuth oauth = new AadOAuth(config);
 
     //TODO testing
-    
   });
 }
