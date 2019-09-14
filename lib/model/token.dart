@@ -13,64 +13,56 @@ class Token {
 
   factory Token.fromJson(Map<String, dynamic> json) => Token.fromMap(json);
 
-  Map toMap() => Token.toJsonMap(this);
-
-  @override
-  String toString() => Token.toJsonMap(this).toString();
-
-  static Map toJsonMap(Token model) {
-    Map ret = new Map();
-    if (model != null) {
-      if (model.accessToken != null) {
-        ret["access_token"] = model.accessToken;
-      }
-      if (model.tokenType != null) {
-        ret["token_type"] = model.tokenType;
-      }
-      if (model.refreshToken != null) {
-        ret["refresh_token"] = model.refreshToken;
-      }
-      if (model.expiresIn != null) {
-        ret["expires_in"] = model.expiresIn;
-      }
-      if (model.expireTimeStamp != null) {
-        ret["expire_timestamp"] = model.expireTimeStamp.millisecondsSinceEpoch;
-      }
-    }
-    return ret;
-  }
-
-  static Token fromMap(Map map) {
-    if (map == null) throw new Exception("No token from received");
+  factory Token.fromMap(Map map) {
+    if (map == null) throw Exception("No token from received");
     //error handling as described in https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#error-response-1
     if (map["error"] != null)
-      throw new Exception("Error during token request: " +
+      throw Exception("Error during token request: " +
           map["error"] +
           ": " +
           map["error_description"]);
 
-    Token model = new Token();
-    model.accessToken = map["access_token"];
-    model.tokenType = map["token_type"];
-    model.expiresIn = map["expires_in"] is int
+    Token token = Token();
+    token.accessToken = map["access_token"];
+    token.tokenType = map["token_type"];
+    token.expiresIn = map["expires_in"] is int
         ? map["expires_in"]
         : int.tryParse(map["expires_in"].toString()) ?? 60;
-    model.refreshToken = map["refresh_token"];
-    model.issueTimeStamp = new DateTime.now().toUtc();
-    model.expireTimeStamp = map.containsKey("expire_timestamp")
+    token.refreshToken = map["refresh_token"];
+    token.issueTimeStamp = DateTime.now().toUtc();
+    token.expireTimeStamp = map.containsKey("expire_timestamp")
         ? DateTime.fromMillisecondsSinceEpoch(map["expire_timestamp"])
-        : model.issueTimeStamp
-            .add(new Duration(seconds: model.expiresIn - model.expireOffSet));
-    return model;
+        : token.issueTimeStamp
+            .add(Duration(seconds: token.expiresIn - token.expireOffSet));
+    return token;
   }
 
-  static bool isExpired(Token token) {
-    return token.expireTimeStamp.isBefore(new DateTime.now().toUtc());
+  Map<String, dynamic> toMap() {
+    final map = Map<String, dynamic>();
+    if (accessToken != null) {
+      map["access_token"] = accessToken;
+    }
+    if (tokenType != null) {
+      map["token_type"] = tokenType;
+    }
+    if (refreshToken != null) {
+      map["refresh_token"] = refreshToken;
+    }
+    if (expiresIn != null) {
+      map["expires_in"] = expiresIn;
+    }
+    if (expireTimeStamp != null) {
+      map["expire_timestamp"] = expireTimeStamp.millisecondsSinceEpoch;
+    }
+    return map;
   }
+
+  @override
+  String toString() => toMap().toString();
+
+  bool get isExpired => expireTimeStamp.isBefore(DateTime.now().toUtc());
 
   static bool tokenIsValid(Token token) {
-    return token != null &&
-        !Token.isExpired(token) &&
-        token.accessToken != null;
+    return token != null && !token.isExpired && token.accessToken != null;
   }
 }

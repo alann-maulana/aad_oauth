@@ -1,45 +1,44 @@
 import 'dart:async';
-import 'dart:ui';
-import 'package:flutter/widgets.dart';
-import 'request/authorization_request.dart';
-import 'model/config.dart';
+
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
+import 'model/config.dart';
+import 'request/authorization_request.dart';
+
 class RequestCode {
-  final StreamController<String> _onCodeListener = new StreamController();
-  final FlutterWebviewPlugin _webView = new FlutterWebviewPlugin();
+  final StreamController<String> _onCodeListener = StreamController();
+  final FlutterWebviewPlugin _webView = FlutterWebviewPlugin();
   final Config _config;
   AuthorizationRequest _authorizationRequest;
 
   var _onCodeStream;
-  
+
   RequestCode(Config config) : _config = config {
-    _authorizationRequest = new AuthorizationRequest(config);
+    _authorizationRequest = AuthorizationRequest(config);
   }
 
   Future<String> requestCode() async {
     var code;
     final String urlParams = _constructUrlParams();
-    
+
     await _webView.launch(
         Uri.encodeFull("${_authorizationRequest.url}?$urlParams"),
-        clearCookies: _authorizationRequest.clearCookies, 
-        hidden: false,  
-        rect: _config.screenSize
-    );
+        clearCookies: _authorizationRequest.clearCookies,
+        hidden: false,
+        rect: _config.screenSize);
 
     _webView.onUrlChanged.listen((String url) {
       Uri uri = Uri.parse(url);
 
-      if(uri.queryParameters["error"] != null) {
+      if (uri.queryParameters["error"] != null) {
         _webView.close();
-        throw new Exception("Access denied or authentation canceled."); 
+        throw Exception("Access denied or authentation canceled.");
       }
-      
+
       if (uri.queryParameters["code"] != null) {
         _webView.close();
         _onCodeListener.add(uri.queryParameters["code"]);
-      }       
+      }
     });
 
     code = await _onCode.first;
@@ -54,7 +53,8 @@ class RequestCode {
   Stream<String> get _onCode =>
       _onCodeStream ??= _onCodeListener.stream.asBroadcastStream();
 
-  String _constructUrlParams() => _mapToQueryParams(_authorizationRequest.parameters);
+  String _constructUrlParams() =>
+      _mapToQueryParams(_authorizationRequest.parameters);
 
   String _mapToQueryParams(Map<String, String> params) {
     final queryParams = <String>[];

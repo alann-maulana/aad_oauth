@@ -1,13 +1,15 @@
 library aad_oauth;
 
-import 'model/config.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'helper/auth_storage.dart';
+import 'model/config.dart';
 import 'model/token.dart';
 import 'request_code.dart';
 import 'request_token.dart';
-import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AadOAuth {
   static Config _config;
@@ -17,18 +19,18 @@ class AadOAuth {
   RequestToken _requestToken;
 
   factory AadOAuth(config) {
-    if ( AadOAuth._instance == null )
-      AadOAuth._instance = new AadOAuth._internal(config);
+    if (AadOAuth._instance == null)
+      AadOAuth._instance = AadOAuth._internal(config);
     return _instance;
   }
 
   static AadOAuth _instance;
 
-  AadOAuth._internal(config){
+  AadOAuth._internal(config) {
     AadOAuth._config = config;
-    _authStorage = _authStorage ?? new AuthStorage();
-    _requestCode = new RequestCode(_config);
-    _requestToken = new RequestToken(_config);
+    _authStorage = _authStorage ?? AuthStorage();
+    _requestCode = RequestCode(_config);
+    _requestToken = RequestToken(_config);
   }
 
   void setWebViewScreenSize(Rect screenSize) {
@@ -37,15 +39,19 @@ class AadOAuth {
 
   Future<void> login() async {
     await _removeOldTokenOnFirstLogin();
-    if (!Token.tokenIsValid(_token) )
-      await _performAuthorization();
+    if (!Token.tokenIsValid(_token)) await _performAuthorization();
+  }
+
+  Future<Token> getToken() async {
+    if (!Token.tokenIsValid(_token)) await _performAuthorization();
+
+    return _token;
   }
 
   Future<String> getAccessToken() async {
-    if (!Token.tokenIsValid(_token) )
-      await _performAuthorization();
+    final token = await getToken();
 
-    return _token.accessToken;
+    return token.accessToken;
   }
 
   bool tokenIsValid() {
@@ -63,17 +69,13 @@ class AadOAuth {
     // load token from cache
     _token = await _authStorage.loadTokenToCache();
 
-    //still have refreh token / try to get new access token with refresh token
+    //still have refresh token / try to get access token with refresh token
     if (_token != null)
       await _performRefreshAuthFlow();
 
     // if we have no refresh token try to perform full request code oauth flow
     else {
-      try {
-        await _performFullAuthFlow();
-      } catch (e) {
-        rethrow;
-      }
+      await _performFullAuthFlow();
     }
 
     //save token to cache
@@ -81,13 +83,8 @@ class AadOAuth {
   }
 
   Future<void> _performFullAuthFlow() async {
-    String code;
-    try {
-      code = await _requestCode.requestCode();
-      _token = await _requestToken.requestToken(code);
-    } catch (e) {
-      rethrow;
-    }
+    String code = await _requestCode.requestCode();
+    _token = await _requestToken.requestToken(code);
   }
 
   Future<void> _performRefreshAuthFlow() async {
