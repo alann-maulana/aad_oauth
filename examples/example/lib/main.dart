@@ -36,7 +36,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static final Config config = new Config("YOUR_TENANT_ID", "YOUR CLIENT ID", "openid profile offline_access", "https://login.live.com/oauth20_desktop.srf",);
+  static final Config config = new Config(
+    azureTennantId: "YOUR_TENANT_ID",
+    clientId: "YOUR CLIENT ID",
+    scope: "openid profile offline_access",
+    redirectUri: "https://login.live.com/oauth20_desktop.srf",
+  );
   final AadOAuth oauth = AadOAuth(config);
 
   Widget build(BuildContext context) {
