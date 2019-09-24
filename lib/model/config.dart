@@ -11,6 +11,7 @@ class Config {
   final String contentType;
   final String scope;
   final String resource;
+  final bool enableLogging;
   Rect screenSize;
 
   Config({
@@ -22,6 +23,7 @@ class Config {
     this.resource,
     this.responseType = "code",
     this.contentType = "application/x-www-form-urlencoded",
+    this.enableLogging = false,
     this.screenSize,
   })  : assert(azureTennantId != null && azureTennantId.isNotEmpty),
         assert(clientId != null && clientId.isNotEmpty),
