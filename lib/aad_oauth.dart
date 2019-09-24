@@ -9,6 +9,9 @@ import 'request_token.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+export 'model/config.dart';
+export 'model/token.dart';
+
 class AadOAuth {
   static Config _config;
   AuthStorage _authStorage;
