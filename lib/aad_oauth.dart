@@ -11,6 +11,9 @@ import 'model/token.dart';
 import 'request_code.dart';
 import 'request_token.dart';
 
+export 'model/config.dart';
+export 'model/token.dart';
+
 class AadOAuth {
   static Config _config;
   AuthStorage _authStorage;
