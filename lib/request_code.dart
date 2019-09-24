@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
+import 'helper/logger.dart';
 import 'model/config.dart';
 import 'request/authorization_request.dart';
 
@@ -29,7 +30,7 @@ class RequestCode {
 
     _webView.onUrlChanged.listen((String url) {
       if (_config.enableLogging) {
-        print('AAD-OAUTH:URL $url');
+        logPrintWrapped('AAD-OAUTH:URL $url');
       }
       Uri uri = Uri.parse(url);
 
