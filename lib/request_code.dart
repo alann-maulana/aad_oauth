@@ -54,7 +54,7 @@ class RequestCode {
     });
 
     code = await _onCode.first;
-    if (code is String) {
+    if (code is String && code.startsWith('ERROR')) {
       if (!code.contains('-#-')) {
         throw Exception("access denied or authentation canceled");
       } else {
