@@ -34,9 +34,17 @@ class RequestCode {
       }
       Uri uri = Uri.parse(url);
 
-      if (uri.queryParameters["error"] != null) {
+      final error = uri.queryParameters["error"];
+      final errorSubCode = uri.queryParameters["error_subcode"];
+      if (error != null || errorSubCode != null) {
         _webView.close();
-        throw Exception("Access denied or authentation canceled.");
+        if (errorSubCode != null) {
+          _onCodeListener.add('ERROR-#-$errorSubCode');
+        } else if (error != null) {
+          _onCodeListener.add('ERROR-#-$error');
+        } else {
+          _onCodeListener.add('ERROR');
+        }
       }
 
       if (uri.queryParameters["code"] != null) {
@@ -46,6 +54,17 @@ class RequestCode {
     });
 
     code = await _onCode.first;
+    if (code is String) {
+      if (!code.contains('-#-')) {
+        throw Exception("access denied or authentation canceled");
+      } else {
+        final split = code.split('-#-');
+        if (split.length == 2) {
+          throw Exception(split.last);
+        }
+      }
+    }
+
     return code;
   }
 
