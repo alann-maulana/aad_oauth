@@ -45,10 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final AadOAuth oauth = AadOAuth(config);
 
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
     // adjust window size for browser login
     var screenSize = MediaQuery.of(context).size;
-    var rectSize =
-        Rect.fromLTWH(0.0, 25.0, screenSize.width, screenSize.height - 25);
+    var rectSize = Rect.fromLTWH(0.0, statusBarHeight, screenSize.width,
+        screenSize.height - statusBarHeight);
     oauth.setWebViewScreenSize(rectSize);
 
     return new Scaffold(
