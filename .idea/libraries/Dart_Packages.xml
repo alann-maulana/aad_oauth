@@ -112,7 +112,7 @@
         <entry key="flutter_webview_plugin">
           <value>
             <list>
-              <option value="$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.8/lib" />
+              <option value="$USER_HOME$/Development/flutter/.pub-cache/git/flutter_webview_plugin-fe0cd2aa14b5ee80623dde1b079055efdea0d709/lib" />
             </list>
           </value>
         </entry>
@@ -460,6 +460,7 @@
       </option>
     </properties>
     <CLASSES>
+      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/git/flutter_webview_plugin-fe0cd2aa14b5ee80623dde1b079055efdea0d709/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/analyzer-0.36.4/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/args-1.5.2/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.2.0/lib" />
@@ -474,7 +475,6 @@
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-0.1.2/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/file-5.0.8/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-3.3.1+1/lib" />
-      <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.8/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/front_end-0.1.19/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/glob-1.1.7/lib" />
       <root url="file://$USER_HOME$/Development/flutter/.pub-cache/hosted/pub.dartlang.org/html-0.14.0+2/lib" />
