@@ -108,4 +108,8 @@ class AadOAuth {
       await prefs.setBool(_keyFreshInstall, false);
     }
   }
+
+  Future<void> _cancelAuthFlow() async {
+    await _requestCode.cancel();
+  }
 }
