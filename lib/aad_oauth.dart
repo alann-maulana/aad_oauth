@@ -111,7 +111,7 @@ class AadOAuth {
     }
   }
 
-  Future<void> _cancelAuthFlow() async {
+  Future<void> cancelAuthFlow() async {
     await _requestCode.cancel();
   }
 }
