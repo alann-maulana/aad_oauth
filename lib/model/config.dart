@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:aad_oauth/helper/logger.dart';
 
 class Config {
   final String azureTennantId;
@@ -11,7 +12,6 @@ class Config {
   final String contentType;
   final String scope;
   final String resource;
-  final bool enableLogging;
   Rect screenSize;
 
   Config({
@@ -23,7 +23,7 @@ class Config {
     this.resource,
     this.responseType = "code",
     this.contentType = "application/x-www-form-urlencoded",
-    this.enableLogging = false,
+    bool enableLogging = false,
     this.screenSize,
   })  : assert(azureTennantId != null && azureTennantId.isNotEmpty),
         assert(clientId != null && clientId.isNotEmpty),
@@ -32,5 +32,7 @@ class Config {
         this.authorizationUrl =
             "https://login.microsoftonline.com/$azureTennantId/oauth2/v2.0/authorize",
         this.tokenUrl =
-            "https://login.microsoftonline.com/$azureTennantId/oauth2/v2.0/token";
+            "https://login.microsoftonline.com/$azureTennantId/oauth2/v2.0/token" {
+    logEnabled = enableLogging ?? false;
+  }
 }
