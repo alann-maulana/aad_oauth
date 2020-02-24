@@ -29,9 +29,7 @@ class RequestCode {
         rect: _config.screenSize);
 
     _webView.onUrlChanged.listen((String url) {
-      if (_config.enableLogging) {
-        logPrintWrapped('AAD-OAUTH:URL $url');
-      }
+      logPrintWrapped(url, tag: 'OPEN-URL');
       Uri uri = Uri.parse(url);
 
       final error = uri.queryParameters["error"];
