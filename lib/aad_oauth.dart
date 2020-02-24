@@ -46,6 +46,11 @@ class AadOAuth {
   }
 
   Future<Token> getToken() async {
+    if (_token == null) {
+      // load token from cache
+      _token = await _authStorage.loadTokenToCache();
+    }
+
     if (!Token.tokenIsValid(_token)) await _performAuthorization();
 
     return _token;
@@ -74,7 +79,12 @@ class AadOAuth {
 
     //still have refresh token / try to get access token with refresh token
     if (_token != null)
-      await _performRefreshAuthFlow();
+      try {
+        await _performRefreshAuthFlow();
+      } catch (_) {
+        //do a full oauth code flow request
+        await _performFullAuthFlow();
+      }
 
     // if we have no refresh token try to perform full request code oauth flow
     else {
@@ -92,12 +102,12 @@ class AadOAuth {
 
   Future<void> _performRefreshAuthFlow() async {
     if (_token.refreshToken != null) {
-      try {
-        _token = await _requestToken.requestRefreshToken(_token.refreshToken);
-      } catch (e) {
-        //do nothing (because later we try to do a full oauth code flow request)
-      }
+      _token = await _requestToken.requestRefreshToken(_token.refreshToken);
+      return;
     }
+
+    //force do a full auth flow
+    throw Exception('No refresh token');
   }
 
   Future<void> _removeOldTokenOnFirstLogin() async {
